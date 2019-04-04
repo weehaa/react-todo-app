@@ -19,6 +19,9 @@ export default class AddItem extends Component {
         // default submit is reloading page!
         e.preventDefault();
         this.props.onAddItem(this.state.label)
+        this.setState({
+            label: ''
+        })
     };
 
     render() {
@@ -30,7 +33,8 @@ export default class AddItem extends Component {
                        onChange={this.onLabelChange}
                        placeholder="new item"
                        aria-label="new item"
-                       aria-describedby="button-addon2" />
+                       aria-describedby="button-addon2"
+                       value={this.state.label}/>
                     <div className="input-group-append">
                         <button className="btn btn-outline-secondary"
                                 type="submit"
