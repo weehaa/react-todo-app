@@ -7,7 +7,7 @@ export default class TodoListItem extends Component {
         const  { label, onDelete,
                 onToggleImportant,
                 onToggleDone,
-                important, done } = this.props;
+                important, done, hidden } = this.props;
 
         let classNames = 'todo-list-item';
         if (done) {
@@ -16,6 +16,10 @@ export default class TodoListItem extends Component {
 
         if (important) {
             classNames += ' important'
+        }
+
+        if (hidden) {
+            classNames += ' hidden'
         }
 
         return (

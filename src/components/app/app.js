@@ -13,11 +13,25 @@ export default class App extends Component {
     maxId = 100;
 
     state = {
+        term: '',
         todoData: [
             this.createTodoItem('Drink Coffee'),
             this.createTodoItem('Create Awesome App'),
             this.createTodoItem('Have a lunch')
         ]
+    };
+
+    searchChange = (term) => {
+        this.setState({ term })
+    };
+
+    search(items, term) {
+        if (term === '') return items;
+        return items.filter((item) => {
+           return item.label
+               .toLowerCase()
+               .indexOf(term.toLowerCase()) > -1
+        });
     };
 
     createTodoItem(label) {
@@ -60,7 +74,8 @@ export default class App extends Component {
     toggleProperty(arr, id, propName) {
         const idx = arr.findIndex((el) => el.id === id);
         const oldItem = arr[idx];
-        // create new Item obj based on existing with updated 'done' property to preserve state
+        // console.log(id, oldItem);
+        // create new Item obj based on existing with updated property to preserve state
         const newItem = { ...oldItem, [propName]: !oldItem[propName] };
         // new array with new Item (not use existing array to preserve state mutation!)
         const newArray = [
@@ -89,7 +104,8 @@ export default class App extends Component {
     };
 
     render() {
-        const { todoData } = this.state;
+        const { todoData, term } = this.state;
+        const visibleItems = this.search(todoData, term);
         const doneCount = todoData.filter((el) => el.done).length;
         const todoCount = todoData.length - doneCount;
 
@@ -97,11 +113,12 @@ export default class App extends Component {
             <article className="container todo-app">
                 <AppHeader toDo={todoCount} done={doneCount} />
                 <section className="top-panel d-flex">
-                    <SearchPanel />
+                    <SearchPanel
+                        onSearchChange={this.searchChange} />
                     <ItemStatusFilter />
                 </section>
                 <TodoList
-                    todos={todoData}
+                    todos={visibleItems}
                     onDelete={ this.deleteItem }
                     onToggleImportant={ this.onToggleImportant }
                     onToggleDone={ this.onToggleDone } />
