@@ -13,17 +13,23 @@ export default class App extends Component {
     maxId = 100;
 
     state = {
-        term: '',
         todoData: [
             this.createTodoItem('Drink Coffee'),
             this.createTodoItem('Create Awesome App'),
             this.createTodoItem('Have a lunch')
-        ]
+        ],
+        searchText: '',
+        filter: 'all' // active, all, done
     };
 
-    searchChange = (term) => {
-        this.setState({ term })
+    searchChange = (searchText) => {
+        this.setState({ searchText })
     };
+
+    filterChange = (filter) => {
+            this.setState({ filter })
+    };
+
 
     search(items, term) {
         if (term === '') return items;
@@ -33,6 +39,19 @@ export default class App extends Component {
                .indexOf(term.toLowerCase()) > -1
         });
     };
+
+    statusFilter(items, filter) {
+        switch(filter) {
+            case 'all':
+                return items;
+            case 'done':
+                return items.filter((el) => el.done);
+            case 'active':
+                return items.filter((el) => !el.done);
+            default:
+                return items;
+        }
+    }
 
     createTodoItem(label) {
         return {
@@ -104,8 +123,9 @@ export default class App extends Component {
     };
 
     render() {
-        const { todoData, term } = this.state;
-        const visibleItems = this.search(todoData, term);
+        const { todoData, searchText, filter } = this.state;
+        const visibleItems = this.statusFilter(
+            this.search(todoData, searchText), filter);
         const doneCount = todoData.filter((el) => el.done).length;
         const todoCount = todoData.length - doneCount;
 
@@ -115,7 +135,9 @@ export default class App extends Component {
                 <section className="top-panel d-flex">
                     <SearchPanel
                         onSearchChange={this.searchChange} />
-                    <ItemStatusFilter />
+                    <ItemStatusFilter
+                        filter={filter}
+                        onFilterChange={this.filterChange}/>
                 </section>
                 <TodoList
                     todos={visibleItems}
