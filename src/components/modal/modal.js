@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const ModalExample = (props) => {
-  const {
-    className,
-    title,
-    body,
-    footer,
-    onDismiss
-  } = props;
-
   const [modal, setModal] = useState(true);
 
   const toggle = () => {
     setModal(!modal);
     onDismiss();
   }
+
+  const {
+    className,
+    title = 'Confirm',
+    body = 'Please confirm',
+    footer = (
+      <>
+        <Button color="primary" onClick={toggle}>Ok</Button>
+        <Button color="secondary" onClick={toggle}>Cancel</Button>
+      </>
+    ),
+    onDismiss = () => {}
+  } = props;
+
+
 
   return (
     <div>
